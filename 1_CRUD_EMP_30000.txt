@@ -1,0 +1,35 @@
+> use employee;
+switched to db employee
+ 
+> show collections;
+db.Emp.insertOne({Name:{FName:"Avi",LName:"Bhosale"},Company:"TCS",Salary:4000000,Designation:"Programmer",Age:20,Expertise:["Web","AIML"],DOB:"15/02/2004",Email:"sanyamkudale@gmail.com",Contact:9322720904,Add:[{PAdd:"Pune",LAdd:"Wai"}]})
+ 
+ 
+db.Emp.insertMany([{Name:{FName:"Sai",LName:"Bhosale"},Company:"Infosys",Salary:27000,Designation:"Programmer",Age:23,Expertise:["Security","DS"],DOB:"22/01/1988",Email:"pb@gmail.com",Contact:8830302417,Add:[{PAdd:{City:"Vyajwadi",Pin:41320},LAdd:"Kondhave"}]},
+{Name:{FName:"Ravi",LName:"Munde"},Company:"IBM",Salary:60000,Designation:"Tester",Age:20,Expertise:["Web"],DOB:"24/05/2003",Email:"rj@gmail.com",Contact:7028003577,Add:[{PAdd:{City:"Pune",Pin:411001},LAdd:"Satara"}]},
+{Name:{FName:"Yash",LName:"Waghamare"},Company:"TCS",Salary:70000,Designation:"Tester",Age:26,Expertise:["Sql","Fullstack"],DOB:"02/5/2000",Email:"kk@gmail.com",Contact:9922639260,Add:[{PAdd:{City:"Kavthe",Pin:411364},LAdd:"Wai"}]},
+{Name:{FName:"Sham",LName:"Bavskar"},Company:"TCS",Salary:70000,Designation:"Tester",Age:24,Expertise:["Mysql","Mongodb","Cassendra"],DOB:"5/05/2001",Email:"xy@gmail.com",Contact:7582302417,Add:[{PAdd:{City:"Mumbai",pin:410604},LAdd:"Pune"}]},
+{Name:{FName:"Megharaj",LName:"Patil"},Company:"ABC",Salary:50000,Designation:"Developer",Age:21,Expertise:["App","UI"],DOB:"14/09/1999",Email:"vd@gmail.com",Contact:77845484155,Add:[{PAdd:{City:"Pune",Pin:20140},LAdd:"Nagar"}]}])
+ 
+1. Select all documents where the Designation field has the value 
+"Programmer" and the value of the salary field is greater than 
+30000.
+> db.Emp.find({Designation:"Programmer",Salary:{$gt:30000}}).pretty()
+ 
+2. Creates a new document if no document in the employee 
+collection contains {Designation: "Tester", Company_name: "TCS", Age: 25}
+> db.Emp.insertOne({ Designation: "Tester", Company: "TCS", Age: 25 })
+
+ 
+3. Increase salary of each Employee working with “Infosys" 10000. 
+> db.Emp.update({Company:"Infosys"},{$inc:{Salary:1000}},{multi:true})
+ 
+4. Finds all employees working with "TCS" and reduce their salary by 5000.
+> db.Emp.updateMany({Company:"TCS"},{$inc:{Salary:-5000}})
+ 
+5. Return documents where Designation is not equal to "Tester".
+> db.Emp.find({Designation:{$ne:"Tester"}}).pretty()
+ 
+6. Find all employee with Exact Match on an Array having 
+Expertise: ['Mongodb','Mysql','Cassandra']
+> db.Emp.find({Expertise:["Mysql","Mongodb","Cassendra"]})

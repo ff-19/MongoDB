@@ -1,0 +1,54 @@
+use employee;
+switched to db employee
+ 
+> show collections;
+db.Emp.insertOne({Name:{FName:"Sai",LName:"Bhosale"},Company:"TCS",Salary:4000000,Designation:"Programmer",Age:20,Expertise:["Web","AIML"],DOB:"15/02/2004",Email:"sanyamkudale@gmail.com",Contact:9322720904,Add:[{PAdd:"Pune",LAdd:"Wai"}]})
+ 
+ 
+db.Emp.insertMany([{Name:{FName:"Parth",LName:"Pawar"},Company:"Infosys",Salary:27000,Designation:"Programmer",Age:23,Expertise:["Security","DS"],DOB:"22/01/1988",Email:"pb@gmail.com",Contact:8830302417,Add:[{PAdd:{City:"Vyajwadi",Pin:41320},LAdd:"Kondhave"}]},
+{Name:{FName:"Ravi",LName:"Munde"},Company:"IBM",Salary:60000,Designation:"Tester",Age:20,Expertise:["Web"],DOB:"24/05/2003",Email:"rj@gmail.com",Contact:7028003577,Add:[{PAdd:{City:"Pune",Pin:411001},LAdd:"Satara"}]},
+{Name:{FName:"Yash",LName:"Waghmare"},Company:"TCS",Salary:70000,Designation:"Tester",Age:26,Expertise:["Sql","Fullstack"],DOB:"02/5/2000",Email:"kk@gmail.com",Contact:9922639260,Add:[{PAdd:{City:"Kavthe",Pin:411364},LAdd:"Wai"}]},
+{Name:{FName:"Meghraj",LName:"Patil"},Company:"TCS",Salary:70000,Designation:"Tester",Age:24,Expertise:["Mysql","Mongodb","Cassendra"],DOB:"5/05/2001",Email:"xy@gmail.com",Contact:7582302417,Add:[{PAdd:{City:"Mumbai",pin:410604},LAdd:"Pune"}]},
+{Name:{FName:"Atharva",LName:"Gangarde"},Company:"ABC",Salary:50000,Designation:"Developer",Age:21,Expertise:["App","UI"],DOB:"14/09/1999",Email:"vd@gmail.com",Contact:77845484155,Add:[{PAdd:{City:"Pune",Pin:20140},LAdd:"Nagar"}]}])
+ 
+1. Display the total salary of per company.
+ 
+> var map= function(){emit(this.Company,this.Salary)};
+ 
+> var reduce=function(Company,Salary){return Array.sum(Salary);};
+ 
+> db.Emp.mapReduce(map,reduce,{out:"resultCollection1"});
+ 
+> db.resultCollection1.find()
+ 
+2. Display the total salary of company Name:"TCS"
+ 
+> var map=function(){ emit(this.Company,this.Salary)};
+ 
+> var reduce=function(Company,Salary){ return Array.sum(Salary);};
+ 
+> db.Empdb.mapReduce(map,reduce,{query:{Company:"TCS"},out :"resultCollection2"});
+ 
+3. Return the average salary of company whose address is “Pune".
+ 
+>var map=function(){ emit(this.Company,this.Salary)};
+ 
+> var reduce=function(Company,Salary){ return Array.avg(Salary)};
+ 
+> db.Emp.mapReduce(map,reduce,{query:{"Add.Ladd":"Pune"},out :"r3"});
+ 
+ 
+4. Display total count for “City=Pune
+>var map = function() {for (var i = 0; i < this.Add.length; i++) {if (this.Add[i].PAdd.City == "Pune") {emit("Pune", 1);break;}}};
+ 
+>var reduce= function(key, values) {return Array.sum(values);};
+ 
+>db.Emp.mapReduce(map,reduce,{ out: "sk"});
+ 
+5.Return count for city Pune and age greater than 40.
+ 
+>var map = function() {for (var i = 0; i < this.Add.length; i++) {if(this.Add[i].PAdd.City == "Pune" && this.Age > 20) {emit("Pune", 1);break;}}};
+ 
+>var reduce = function(key, values) {return Array.sum(values);};
+ 
+>db.Emp.mapReduce(map,reduce,{ out:"kk" });

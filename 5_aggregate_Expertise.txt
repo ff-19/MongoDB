@@ -1,0 +1,51 @@
+use employee;
+switched to db employee
+ 
+> show collections;
+db.Emp.insertOne({Name:{FName:"Sai",LName:"Bhosale"},Company:"TCS",Salary:4000000,Designation:"Programmer",Age:20,Expertise:["Web","AIML"],DOB:"15/02/2004",Email:"sanyamkudale@gmail.com",Contact:9322720904,Add:[{PAdd:"Pune",LAdd:"Wai"}]})
+ 
+ 
+db.Emp.insertMany([{Name:{FName:"Parth",LName:"Pawar"},Company:"Infosys",Salary:27000,Designation:"Programmer",Age:23,Expertise:["Security","DS"],DOB:"22/01/1988",Email:"pb@gmail.com",Contact:8830302417,Add:[{PAdd:{City:"Vyajwadi",Pin:41320},LAdd:"Kondhave"}]},
+{Name:{FName:"Ravi",LName:"Munde"},Company:"IBM",Salary:60000,Designation:"Tester",Age:20,Expertise:["Web"],DOB:"24/05/2003",Email:"rj@gmail.com",Contact:7028003577,Add:[{PAdd:{City:"Pune",Pin:411001},LAdd:"Satara"}]},
+{Name:{FName:"Yash",LName:"Waghamare"},Company:"TCS",Salary:70000,Designation:"Tester",Age:26,Expertise:["Sql","Fullstack"],DOB:"02/5/2000",Email:"kk@gmail.com",Contact:9922639260,Add:[{PAdd:{City:"Kavthe",Pin:411364},LAdd:"Wai"}]},
+{Name:{FName:"Sham",LName:"Bavaskar"},Company:"TCS",Salary:70000,Designation:"Tester",Age:24,Expertise:["Mysql","Mongodb","Cassendra"],DOB:"5/05/2001",Email:"xy@gmail.com",Contact:7582302417,Add:[{PAdd:{City:"Mumbai",pin:410604},LAdd:"Pune"}]},
+{Name:{FName:"Atharva",LName:"Gangarde"},Company:"ABC",Salary:50000,Designation:"Developer",Age:21,Expertise:["App","UI"],DOB:"14/09/1999",Email:"vd@gmail.com",Contact:77845484155,Add:[{PAdd:{City:"Pune",Pin:20140},LAdd:"Nagar"}]}])
+ 
+1. Using aggregation Return separates value in the Expertise 
+array and return sum of each element of array.
+db.Emp.aggregate([
+   { $unwind: "$Expertise" },
+   { $group: { _id: "$Expertise", count: { $sum: 1 } } }
+])
+
+2. Using Aggregate method return Max and Min Salary for each 
+company.
+> db.Emp.aggregate([{$group:{_id:"$Company",min:{$min:"$Salary"},max:{$max:"$Salary"}}}])
+ 
+3. Using Aggregate method find Employee with Total Salary for 
+Each City with Designation="DBA".
+db.Emp.aggregate([{$match:{Designation:"Tester"}},{$group:{_id:"$Add.PAdd",totalsal:{$sum:"$Salary"}}}])
+ 
+4. Using aggregation method Return separates value in the 
+Expertise array for employee name where Swapnil Jadhav.
+> db.Emp.aggregate([{$unwind:"$Expertise"},{$match:{"Name.FName":"Sai","Name.LName":"Bhosale"}},{$group:{_id:"$Expertise"}}])
+ 
+5. To Create Compound Indexes on Name: 1, Age: -1
+> db.Emp.createIndex({Name:1,Age:-1})
+ 
+6. Create an Index on Emp_id field , compare the time require to 
+search Emp_id before and after creating an index. (Hint Add 
+at least 10000 Documents)
+ 
+> for (i=0; i<10000; i++) {db.user.insert({"i". i,"username" : "user" +i,"age" : Math.floor(Math.random()*120), "created" : new Date() } ); }
+ 
+> db.user.count() 
+ 
+> db.user.find({}).explain("executionStats") 
+ 
+> db.user.find({username:"'user0"}).explain(''executionStats") 
+ 
+> db.user.find({username:"'user9999"}).explain("executionStats") 
+ 
+> db.user.createIndex({username: 1}) 
+db.user.find({}).explain("'executionStats') 
